@@ -1,5 +1,6 @@
+/// <reference path="./typings/tsd.d.ts" />
 import { Component, EventEmitter, NgIf } from 'angular2/angular2';
-declare const electron: any;
+declare var electron: GitHubElectron.Electron;
 
 @Component({
   selector: 'my-app',
