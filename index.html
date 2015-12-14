@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>dc-electron</title>
+    <script src="./node_modules/es6-shim/es6-shim.js"></script>
+    
+    <script src="./node_modules/systemjs/dist/system.src.js"></script>
+    <script src="./node_modules/angular2/bundles/angular2.dev.js"></script>
+    <script src="./node_modules/angular2/bundles/router.dev.js"></script>
+    <script src="./node_modules/angular2/bundles/http.dev.js"></script>
+    <script>
+      // This require doesn't work properly inside System.js
+      window.electron = require('electron'); 
+      
+      System.config({
+        packages: {'app': {defaultExtension: 'js'}
+        }
+      });
+      System.import('app/bootstrap');
+    </script>
+  </head>
+  <body>
+    <my-app></my-app>
+  </body>
+</html>
