@@ -3,7 +3,7 @@ declare const electron: any;
 
 @Component({
   selector: 'my-app',
-  template: `test`
+  templateUrl: './app/app.html'
 })
 // @RouteConfig([
 //   { path: '/', as: 'Main', component: MainComponent }
