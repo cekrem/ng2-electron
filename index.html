@@ -4,17 +4,17 @@
     <meta charset="UTF-8">
     <title>dc-electron</title>
     
-    <link rel="stylesheet" href="photon.min.css">
+    <link rel="stylesheet" href="./css/photon.min.css">
     
-    <script src="./node_modules/es6-shim/es6-shim.js"></script>
+    <!--<script src="./node_modules/es6-shim/es6-shim.js"></script>-->
     
     <script src="./node_modules/systemjs/dist/system.src.js"></script>
     <script src="./node_modules/angular2/bundles/angular2.dev.js"></script>
     <script src="./node_modules/angular2/bundles/router.dev.js"></script>
     <script src="./node_modules/angular2/bundles/http.dev.js"></script>
     <script>
-      // This require doesn't work properly inside System.js
-      window.electron = require('electron'); 
+      // Require doesn't work properly inside System.js
+      window.requireNative = require;
       
       System.config({
         packages: {'app': {defaultExtension: 'js'}

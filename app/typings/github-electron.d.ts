@@ -3,8 +3,6 @@
 // Definitions by: jedmao <https://github.com/jedmao/>, rhysd <https://rhysd.github.io>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 
-/// <reference path="../node/node.d.ts" />
-
 declare module GitHubElectron {
 	/**
 	 * This class is used to represent an image.

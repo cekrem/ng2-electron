@@ -1,6 +1,5 @@
-/// <reference path="./typings/tsd.d.ts" />
 import { Component, EventEmitter, NgIf } from 'angular2/angular2';
-declare var electron: GitHubElectron.Electron;
+import { electron } from './electron';
 
 @Component({
   selector: 'my-app',
@@ -13,7 +12,6 @@ declare var electron: GitHubElectron.Electron;
 export class AppComponent {
   constructor () {
     const mainWindow = electron.remote.getCurrentWindow();
-    
     mainWindow.show();
   }
 }
