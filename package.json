@@ -5,7 +5,8 @@
   "main": "main.js",
   "scripts": {
     "tsc": "tsc -p angular -w",
-    "start": "electron main.js"
+    "start": "electron main.js",
+    "package": "electron-packager ./ dc-electron --out=./dist --platform=all --arch=x64 --version=0.35.0 --overwrite=true --asar=true --asar-unpack=*.node"
   },
   "repository": {
     "type": "git",
@@ -24,6 +25,7 @@
   },
   "homepage": "https://github.com/atom/electron-quick-start#readme",
   "devDependencies": {
+    "electron-packager": "^5.1.1",
     "electron-prebuilt": "^0.35.0",
     "typescript": "^1.7.3"
   },
