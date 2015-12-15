@@ -1,4 +1,4 @@
-import { Component, EventEmitter, NgIf } from 'angular2/angular2';
+import { Component } from 'angular2/core';
 import { electron } from './electron';
 
 @Component({

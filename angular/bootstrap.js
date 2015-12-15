@@ -1,8 +1,16 @@
-var angular2_1 = require('angular2/angular2');
-var router_1 = require('angular2/router');
-var app_1 = require('./app');
-angular2_1.bootstrap(app_1.AppComponent, [
-    router_1.ROUTER_PROVIDERS,
-    angular2_1.provide(router_1.LocationStrategy, { useClass: router_1.HashLocationStrategy })
-]);
+System.register(['angular2/platform/browser', './app'], function(exports_1) {
+    var browser_1, app_1;
+    return {
+        setters:[
+            function (browser_1_1) {
+                browser_1 = browser_1_1;
+            },
+            function (app_1_1) {
+                app_1 = app_1_1;
+            }],
+        execute: function() {
+            browser_1.bootstrap(app_1.AppComponent);
+        }
+    }
+});
 //# sourceMappingURL=bootstrap.js.map
