@@ -4,7 +4,7 @@
   "description": "A minimal Electron application",
   "main": "main.js",
   "scripts": {
-    "tsc": "tsc -p app -w",
+    "tsc": "tsc -p angular -w",
     "start": "electron main.js"
   },
   "repository": {

@@ -3,7 +3,7 @@ import { electron } from './electron';
 
 @Component({
   selector: 'my-app',
-  templateUrl: './app/app.html'
+  templateUrl: './angular/app.html'
 })
 // @RouteConfig([
 //   { path: '/', as: 'Main', component: MainComponent }

@@ -1,3 +1,5 @@
+// Main renderer. For browser renderer, see ./angular
+
 'use strict';
 const electron = require('electron');
 const app = electron.app;  // Module to control application life.
