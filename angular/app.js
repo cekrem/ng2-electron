@@ -21,9 +21,30 @@ System.register(['angular2/core', './electron'], function(exports_1) {
         execute: function() {
             AppComponent = (function () {
                 function AppComponent() {
-                    var mainWindow = electron_1.electron.remote.getCurrentWindow();
-                    mainWindow.show();
+                    this.mainWindow = electron_1.Remote.getCurrentWindow();
                 }
+                AppComponent.prototype.ngOnInit = function () {
+                    var menu = electron_1.Remote.Menu.buildFromTemplate([
+                        {
+                            label: 'dc-electron',
+                            submenu: [{
+                                    label: 'Credits',
+                                    click: function () {
+                                        alert('Built by Christian Ekrem!');
+                                    }
+                                }]
+                        }
+                    ]);
+                    // Remote.Menu.setApplicationMenu(menu);
+                    this.mainWindow.show();
+                };
+                AppComponent.prototype.newWindow = function () {
+                    var win = new electron_1.Remote.BrowserWindow({ width: 800, height: 600 });
+                    win.loadURL("file://" + __dirname + "/index.html");
+                };
+                AppComponent.prototype.openFile = function () {
+                    electron_1.Remote.dialog.showOpenDialog({ properties: ['openFile'] }, function (files) { return alert(files[0]); });
+                };
                 AppComponent = __decorate([
                     core_1.Component({
                         selector: 'my-app',
