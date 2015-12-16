@@ -1,5 +1,5 @@
 import { Component, OnInit } from 'angular2/core';
-import { Remote } from './electron';
+declare const Remote;
 
 @Component({
 	selector: 'my-app',

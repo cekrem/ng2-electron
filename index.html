@@ -15,7 +15,7 @@
     <script src="node_modules/angular2/bundles/router.dev.js"></script>
     <script>
       // Require doesn't work properly inside System.js
-      window.requireNative = require;
+      window.Remote = require('electron').remote;
       
       System.config({
         packages: {        
