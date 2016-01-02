@@ -10,7 +10,7 @@ declare const Remote;
 // ])
 
 export class AppComponent implements OnInit {
-	private mainWindow: GitHubElectron.BrowserWindow;
+	private mainWindow: any;
 
 	constructor() {
 		this.mainWindow = Remote.getCurrentWindow();
