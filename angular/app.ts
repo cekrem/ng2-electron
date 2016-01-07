@@ -1,6 +1,6 @@
 import { Component, OnInit } from 'angular2/core';
 declare const Remote;
-declare const ipc;
+declare const ipcRemote;
 
 @Component({
 	selector: 'my-app',

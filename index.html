@@ -16,7 +16,7 @@
     <script>
       // Require doesn't work properly inside System.js
       window.Remote = require('electron').remote;
-      window.ipc = require('electron').ipc;
+      window.ipc = require('electron').ipcRemote;
       
       System.config({
         packages: {        
