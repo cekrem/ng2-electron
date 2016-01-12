@@ -1,6 +1,7 @@
+declare const nodeRequire;
+const Remote = nodeRequire('electron').remote;
+
 import { Component, OnInit } from 'angular2/core';
-declare const Remote;
-declare const ipcRemote;
 
 @Component({
 	selector: 'my-app',
