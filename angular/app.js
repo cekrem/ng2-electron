@@ -38,7 +38,7 @@ System.register(['angular2/core'], function(exports_1) {
                 };
                 AppComponent.prototype.newWindow = function () {
                     var win = new Remote.BrowserWindow({ width: 800, height: 600 });
-                    win.loadURL("file://" + __dirname + "/index.html");
+                    win.loadURL("file://" + __dirname + "/index.html#test");
                 };
                 AppComponent.prototype.openFile = function () {
                     Remote.dialog.showOpenDialog({ properties: ['openFile'] }, function (files) { return alert(files[0]); });
