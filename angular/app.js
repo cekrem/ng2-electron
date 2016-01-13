@@ -9,13 +9,14 @@ System.register(['angular2/core'], function(exports_1) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
     var core_1;
-    var AppComponent;
+    var Remote, AppComponent;
     return {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
             }],
         execute: function() {
+            Remote = nodeRequire('electron').remote;
             AppComponent = (function () {
                 function AppComponent() {
                     this.mainWindow = Remote.getCurrentWindow();
