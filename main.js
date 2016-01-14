@@ -19,31 +19,27 @@ electron.crashReporter.start();
 let mainWindow;
 
 // Quit when all windows are closed.
-app.on('window-all-closed', function() {
-  // On OS X it is common for applications and their menu bar
-  // to stay active until the user quits explicitly with Cmd + Q
-  mainWindow = new BrowserWindow({width: 800, height: 600, show: false});
-  mainWindow.loadURL(`file://${__dirname}/index.html`);
+app.on('window-all-closed', function () {
+    // Load welcome screen when no documents are open (like photoshop)
+    loadWelcome();
 });
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
-app.on('ready', function() {
-  // Create the browser window.
-  mainWindow = new BrowserWindow({width: 800, height: 600, show: true});
+app.on('ready', function () {
+    // Load welcome screen
+    loadWelcome();
 
-  // and load the index.html of the app.
-  mainWindow.loadURL(`file://${__dirname}/index.html`);
-
-  // Open the DevTools.
-  // mainWindow.webContents.openDevTools();
-
-  // Emitted when the window is closed.
-  mainWindow.on('closed', function() {
-    // Dereference the window object, usually you would store windows
-    // in an array if your app supports multi windows, this is the time
-    // when you should delete the corresponding element.
-    mainWindow = null;
-  });
+    // Emitted when the window is closed.
+    mainWindow.on('closed', function () {
+        // Dereference the window object, usually you would store windows
+        // in an array if your app supports multi windows, this is the time
+        // when you should delete the corresponding element.
+        mainWindow = null;
+    });
 });
 
+function loadWelcome() {
+    mainWindow = new BrowserWindow({ width: 800, height: 600, frame: false, show: false });
+    mainWindow.loadURL(`file://${__dirname}/index.html`);
+}
