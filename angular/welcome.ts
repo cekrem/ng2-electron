@@ -5,7 +5,7 @@ import { Component, OnInit } from 'angular2/core';
 
 @Component({
     selector: 'welcome',
-    template: '<h1>Welcome</h1>'
+    templateUrl: './angular/welcome.html'
 })
 
 export class WelcomeComponent implements OnInit {

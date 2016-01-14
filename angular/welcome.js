@@ -46,7 +46,7 @@ System.register(['angular2/core'], function(exports_1) {
                 WelcomeComponent = __decorate([
                     core_1.Component({
                         selector: 'welcome',
-                        template: '<h1>Welcome</h1>'
+                        templateUrl: './angular/welcome.html'
                     }), 
                     __metadata('design:paramtypes', [])
                 ], WelcomeComponent);

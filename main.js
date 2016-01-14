@@ -40,6 +40,14 @@ app.on('ready', function () {
 });
 
 function loadWelcome() {
-    mainWindow = new BrowserWindow({ width: 800, height: 600, frame: false, show: false });
+    mainWindow = new BrowserWindow({ 
+        width: 600, 
+        height: 300,
+        center: true,
+        //alwaysOnTop: true,
+        transparent: true,
+        resizable: false,
+        frame: false,
+        show: false });
     mainWindow.loadURL(`file://${__dirname}/index.html`);
 }
