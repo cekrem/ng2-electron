@@ -1,4 +1,4 @@
-System.register(['angular2/core'], function(exports_1) {
+System.register(['angular2/core', 'angular2/router', './welcome'], function(exports_1) {
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
         var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
         if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -8,46 +8,37 @@ System.register(['angular2/core'], function(exports_1) {
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1;
-    var Remote, AppComponent;
+    var core_1, router_1, welcome_1;
+    var AppComponent;
     return {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
+            },
+            function (router_1_1) {
+                router_1 = router_1_1;
+            },
+            function (welcome_1_1) {
+                welcome_1 = welcome_1_1;
             }],
         execute: function() {
-            Remote = nodeRequire('electron').remote;
             AppComponent = (function () {
                 function AppComponent() {
-                    this.mainWindow = Remote.getCurrentWindow();
                 }
-                AppComponent.prototype.ngOnInit = function () {
-                    var menu = Remote.Menu.buildFromTemplate([
-                        {
-                            label: 'dc-electron',
-                            submenu: [{
-                                    label: 'Credits',
-                                    click: function () {
-                                        alert('Built by Christian Ekrem!');
-                                    }
-                                }]
-                        }
-                    ]);
-                    // Remote.Menu.setApplicationMenu(menu);
-                    this.mainWindow.show();
-                };
-                AppComponent.prototype.newWindow = function () {
-                    var win = new Remote.BrowserWindow({ width: 800, height: 600 });
-                    win.loadURL("file://" + __dirname + "/index.html#test");
-                };
-                AppComponent.prototype.openFile = function () {
-                    Remote.dialog.showOpenDialog({ properties: ['openFile'] }, function (files) { return alert(files[0]); });
-                };
                 AppComponent = __decorate([
                     core_1.Component({
                         selector: 'my-app',
-                        templateUrl: './angular/app.html'
-                    }), 
+                        templateUrl: './angular/app.html',
+                        directives: [router_1.ROUTER_DIRECTIVES]
+                    }),
+                    router_1.RouteConfig([
+                        {
+                            path: '/welcome',
+                            name: 'Welcome',
+                            component: welcome_1.WelcomeComponent,
+                            useAsDefault: true
+                        }
+                    ]), 
                     __metadata('design:paramtypes', [])
                 ], AppComponent);
                 return AppComponent;

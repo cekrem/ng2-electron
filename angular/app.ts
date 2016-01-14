@@ -1,46 +1,23 @@
-declare const nodeRequire;
-const Remote = nodeRequire('electron').remote;
-
 import { Component, OnInit } from 'angular2/core';
+import { RouteConfig, ROUTER_DIRECTIVES } from 'angular2/router';
+
+import { WelcomeComponent } from './welcome';
 
 @Component({
 	selector: 'my-app',
-	templateUrl: './angular/app.html'
+	templateUrl: './angular/app.html',
+    directives: [ROUTER_DIRECTIVES]
 })
-// @RouteConfig([
-//   { path: '/', as: 'Main', component: MainComponent }
-// ])
 
-export class AppComponent implements OnInit {
-	private mainWindow: any;
+@RouteConfig([
+    {
+        path: '/welcome',
+        name: 'Welcome',
+        component: WelcomeComponent,
+        useAsDefault: true
+    }
+])
 
-	constructor() {
-		this.mainWindow = Remote.getCurrentWindow();
-	}
-
-	ngOnInit() {
-		let menu = Remote.Menu.buildFromTemplate([
-			{
-				label: 'dc-electron',
-				submenu: [{
-					label: 'Credits',
-					click: function() {
-						alert('Built by Christian Ekrem!');
-					}
-				}]
-			}
-		]);
-
-		// Remote.Menu.setApplicationMenu(menu);
-		this.mainWindow.show();
-	}
-
-	newWindow() {
-		let win = new Remote.BrowserWindow({ width: 800, height: 600 });
-		win.loadURL(`file://${__dirname}/index.html#test`);
-	}
-	
-	openFile() {
-		Remote.dialog.showOpenDialog({ properties: [ 'openFile' ]}, (files) => alert(files[0]));
-	}
+export class AppComponent {
+    
 }
