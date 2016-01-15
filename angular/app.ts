@@ -1,3 +1,6 @@
+declare const nodeRequire;
+const ipc = nodeRequire('electron').ipcRenderer;
+
 import { Component, OnInit } from 'angular2/core';
 import { RouteConfig, ROUTER_DIRECTIVES } from 'angular2/router';
 
@@ -21,3 +24,5 @@ import { WelcomeComponent } from './welcome';
 export class AppComponent {
     
 }
+
+export let license = ipc.sendSync('licenseQuery'); // Is this good practice? Seems convenient

@@ -2,17 +2,23 @@
 
 'use strict';
 const electron = require('electron');
-const ipcMain = electron.ipcMain;
+const ipc = electron.ipcMain;
 
 const app = electron.app;  // Module to control application life.
 const BrowserWindow = electron.BrowserWindow;  // Module to create native browser window.
 const Menu = electron.Menu;
 
+const fs = require('fs');
+const path = require('path');
+const licensePath = path.join(app.getPath('userData'), 'license.json')
+
+loadLicense();
+
 // Create a blank menu
 // Menu.setApplicationMenu(new Menu());
 
 // Report crashes to our server.
-electron.crashReporter.start();
+// electron.crashReporter.start();
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -44,10 +50,27 @@ function loadWelcome() {
         width: 600, 
         height: 300,
         center: true,
-        //alwaysOnTop: true,
-        transparent: true,
+        alwaysOnTop: false,
+        transparent: false,
         resizable: false,
         frame: false,
         show: false });
     mainWindow.loadURL(`file://${__dirname}/index.html`);
+}
+
+function loadLicense() {
+    let license; 
+    if(!fs.existsSync(licensePath)) {
+        license = {
+            key: 'demo',
+            id: 'demo'
+        }
+    }
+    else {
+        license = JSON.parse(fs.readFileSync(licensePath, 'utf-8'));
+    }
+    
+    ipc.on('licenseQuery', function(event) {
+        event.returnValue = license;
+    });
 }

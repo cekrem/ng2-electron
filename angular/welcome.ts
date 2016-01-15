@@ -2,6 +2,7 @@ declare const nodeRequire;
 const Remote = nodeRequire('electron').remote;
 
 import { Component, OnInit } from 'angular2/core';
+import { license } from './app';
 
 @Component({
     selector: 'welcome',
@@ -10,9 +11,11 @@ import { Component, OnInit } from 'angular2/core';
 
 export class WelcomeComponent implements OnInit {
 	private mainWindow: any;
+    public licensedTo: string;
 
 	constructor() {
 		this.mainWindow = Remote.getCurrentWindow();
+        this.licensedTo = license.id;
 	}
 
 	ngOnInit() {
@@ -30,6 +33,7 @@ export class WelcomeComponent implements OnInit {
 
 		// Remote.Menu.setApplicationMenu(menu);
 		this.mainWindow.show();
+        console.log(license);
 	}
 
 	newWindow() {
