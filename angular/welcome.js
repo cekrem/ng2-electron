@@ -27,7 +27,8 @@ System.register(['angular2/core', './services/license-service', './services/data
                 function WelcomeComponent(dataService) {
                     this.mainWindow = Remote.getCurrentWindow();
                     this.licensedTo = license_service_1.license.id;
-                    this.userData = dataService.getData('');
+                    // this.userData = dataService.getData();
+                    this.userFeed = dataService.subscribeTo();
                 }
                 WelcomeComponent.prototype.ngOnInit = function () {
                     this.mainWindow.show();

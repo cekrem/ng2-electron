@@ -1,4 +1,4 @@
-System.register(['angular2/core', 'angular2/http', './license-service'], function(exports_1) {
+System.register(['angular2/core', 'rxjs/Observable', './license-service'], function(exports_1) {
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
         var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
         if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -8,15 +8,15 @@ System.register(['angular2/core', 'angular2/http', './license-service'], functio
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, http_1, license_service_1;
+    var core_1, Observable_1, license_service_1;
     var Firebase, DataService;
     return {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
             },
-            function (http_1_1) {
-                http_1 = http_1_1;
+            function (Observable_1_1) {
+                Observable_1 = Observable_1_1;
             },
             function (license_service_1_1) {
                 license_service_1 = license_service_1_1;
@@ -24,31 +24,41 @@ System.register(['angular2/core', 'angular2/http', './license-service'], functio
         execute: function() {
             Firebase = nodeRequire('Firebase');
             DataService = (function () {
-                function DataService(http) {
-                    this.http = http;
+                function DataService() {
                     this.baseUrl = 'https://dc-pro.firebaseio.com/users/' + license_service_1.license.id;
                 }
+                DataService.prototype.connectTo = function (path) {
+                    if (path === void 0) { path = ''; }
+                    this.activeRef = new Firebase(this.baseUrl + path);
+                };
                 DataService.prototype.getData = function (path) {
                     if (path === void 0) { path = ''; }
-                    return this.http.get(this.baseUrl + path + '.json')
-                        .map(function (res) { return res.json(); });
+                    var ref = new Firebase(this.baseUrl + path);
+                    var promise = new Promise(function (resolve, reject) {
+                        ref.on('value', function (snapshot) {
+                            resolve(snapshot.val());
+                        });
+                    });
+                    return promise;
                 };
                 // not quite working because of firebase crap, see downmost comment
                 DataService.prototype.subscribeTo = function (path) {
+                    var _this = this;
                     if (path === void 0) { path = ''; }
                     var ref = new Firebase(this.baseUrl + path);
-                    var emitter = new core_1.EventEmitter();
-                    var fakeEmitter = new core_1.EventEmitter();
-                    ref.on('value', function (snapshot) {
-                        emitter.emit({ snapshot: .val() });
+                    var observable = Observable_1.Observable.create(function (observer) {
+                        ref.on('value', function (snapshot) {
+                            observer.next(snapshot.val());
+                            _this.cdRef.markForCheck();
+                        });
                     });
                     // This sucks, but I have yet to find out how to do change detection on the firebase callback otherwise!
                     // setInterval(()=> fakeEmitter.emit(Math.random()), 1000);
-                    return emitter;
+                    return observable;
                 };
                 DataService = __decorate([
                     core_1.Injectable(), 
-                    __metadata('design:paramtypes', [http_1.Http])
+                    __metadata('design:paramtypes', [])
                 ], DataService);
                 return DataService;
             })();
