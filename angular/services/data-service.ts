@@ -2,23 +2,39 @@ declare const nodeRequire;
 const Firebase = nodeRequire('Firebase');
 
 import { Injectable, EventEmitter } from 'angular2/core';
+import { Http, HTTP_PROVIDERS } from 'angular2/http';
+import { Observable } from 'rxjs/Observable';
+
+import { license } from './license-service';
 
 @Injectable()
 export class DataService {
+    private http: Http;
     private baseUrl: string;
-    private ref: any;
-    public tournamentFeed: EventEmitter<any>;
     
-    constructor() {
-        this.baseUrl = 'https://dc-pro.firebaseio.com/uid'; // TODO: get uid from license?
+    constructor(http: Http) {
+        this.http = http;
+        this.baseUrl = 'https://dc-pro.firebaseio.com/users/' + license.id;
     }
     
-    // this is best practice for getting read only, and works well with async pipe,
-    // but how do we save changes back? 
-    subscribe(tuid: string) { 
-        this.ref = new Firebase(this.baseUrl + tuid);
-        this.tournamentFeed = new EventEmitter();
+    getData(path: string = '') {
+        return this.http.get(this.baseUrl + path + '.json')
+            .map((res) => res.json())
+    }
+
+    // not quite working because of firebase crap, see downmost comment
+    subscribeTo(path: string = '') {
+        let ref = new Firebase(this.baseUrl + path);
+        let emitter: EventEmitter<any> = new EventEmitter();
+        let fakeEmitter = new EventEmitter();
+
+        ref.on('value', snapshot =>  {
+            emitter.emit({snapshot.val()});
+        });
         
-        this.ref.on('value', snapshot => this.tournamentFeed.emit(snapshot.val()));
-    }
+        // This sucks, but I have yet to find out how to do change detection on the firebase callback otherwise!
+        // setInterval(()=> fakeEmitter.emit(Math.random()), 1000);
+        
+        return emitter;
+    }    
 }

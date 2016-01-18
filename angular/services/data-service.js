@@ -1,4 +1,4 @@
-System.register(['angular2/core'], function(exports_1) {
+System.register(['angular2/core', 'angular2/http', './license-service'], function(exports_1) {
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
         var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
         if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -8,30 +8,47 @@ System.register(['angular2/core'], function(exports_1) {
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1;
+    var core_1, http_1, license_service_1;
     var Firebase, DataService;
     return {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
+            },
+            function (http_1_1) {
+                http_1 = http_1_1;
+            },
+            function (license_service_1_1) {
+                license_service_1 = license_service_1_1;
             }],
         execute: function() {
             Firebase = nodeRequire('Firebase');
             DataService = (function () {
-                function DataService() {
-                    this.baseUrl = 'https://dc-pro.firebaseio.com/uid'; // TODO: get uid from license?
+                function DataService(http) {
+                    this.http = http;
+                    this.baseUrl = 'https://dc-pro.firebaseio.com/users/' + license_service_1.license.id;
                 }
-                // this is best practice for getting read only, and works well with async pipe,
-                // but how do we save changes back? 
-                DataService.prototype.subscribe = function (tuid) {
-                    var _this = this;
-                    this.ref = new Firebase(this.baseUrl + tuid);
-                    this.tournamentFeed = new core_1.EventEmitter();
-                    this.ref.on('value', function (snapshot) { return _this.tournamentFeed.emit(snapshot.val()); });
+                DataService.prototype.getData = function (path) {
+                    if (path === void 0) { path = ''; }
+                    return this.http.get(this.baseUrl + path + '.json')
+                        .map(function (res) { return res.json(); });
+                };
+                // not quite working because of firebase crap, see downmost comment
+                DataService.prototype.subscribeTo = function (path) {
+                    if (path === void 0) { path = ''; }
+                    var ref = new Firebase(this.baseUrl + path);
+                    var emitter = new core_1.EventEmitter();
+                    var fakeEmitter = new core_1.EventEmitter();
+                    ref.on('value', function (snapshot) {
+                        emitter.emit({ snapshot: .val() });
+                    });
+                    // This sucks, but I have yet to find out how to do change detection on the firebase callback otherwise!
+                    // setInterval(()=> fakeEmitter.emit(Math.random()), 1000);
+                    return emitter;
                 };
                 DataService = __decorate([
                     core_1.Injectable(), 
-                    __metadata('design:paramtypes', [])
+                    __metadata('design:paramtypes', [http_1.Http])
                 ], DataService);
                 return DataService;
             })();

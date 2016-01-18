@@ -54,20 +54,31 @@ function loadWelcome() {
         transparent: false,
         resizable: false,
         frame: false,
-        show: false });
+        show: true });
     mainWindow.loadURL(`file://${__dirname}/index.html`);
 }
 
 function loadLicense() {
     let license; 
-    if(!fs.existsSync(licensePath)) {
-        license = {
-            key: 'demo',
-            id: 'demo'
+    
+    try {
+        let licenseFromFile = JSON.parse(fs.readFileSync(licensePath, 'utf-8'));
+        
+        if(licenseFromFile.key == btoa(licenseFromFile.id)) {
+            license = licenseFromFile;
+        }
+        else {
+            throw new Error('Invalid license!');
         }
     }
-    else {
-        license = JSON.parse(fs.readFileSync(licensePath, 'utf-8'));
+    
+    catch(error) {
+        console.error(error);
+        console.log('Continuing in demo mode!');
+        
+        license = {
+            id: 'demo'
+        }
     }
     
     ipc.on('licenseQuery', function(event) {

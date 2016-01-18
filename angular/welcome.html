@@ -2,3 +2,7 @@
     <h1>Welcome!</h1>
     <small>Licensed to: {{licensedTo}}</small>
 </div>
+
+<div>userData: {{userData | async}}</div>
+<div *ngIf="fireData">fireData: {{fireData}}</div>
+<div *ngIf="!fireData">loading fireData</div>

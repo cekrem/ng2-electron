@@ -16,10 +16,9 @@
     <script src="node_modules/rxjs/bundles/Rx.js"></script>
     <script src="node_modules/angular2/bundles/angular2.dev.js"></script>
     <script src="node_modules/angular2/bundles/router.dev.js"></script>
+    <script src="node_modules/angular2/bundles/http.dev.js"></script>
     <script>
       // Require doesn't work properly inside System.js
-      window.Remote = require('electron').remote;
-      window.ipc = require('electron').ipcRemote;
       window.nodeRequire = require;
       
       System.config({

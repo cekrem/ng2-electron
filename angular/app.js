@@ -9,7 +9,7 @@ System.register(['angular2/core', 'angular2/router', './welcome'], function(expo
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
     var core_1, router_1, welcome_1;
-    var ipc, AppComponent, license;
+    var AppComponent;
     return {
         setters:[
             function (core_1_1) {
@@ -22,7 +22,6 @@ System.register(['angular2/core', 'angular2/router', './welcome'], function(expo
                 welcome_1 = welcome_1_1;
             }],
         execute: function() {
-            ipc = nodeRequire('electron').ipcRenderer;
             AppComponent = (function () {
                 function AppComponent() {
                 }
@@ -45,7 +44,6 @@ System.register(['angular2/core', 'angular2/router', './welcome'], function(expo
                 return AppComponent;
             })();
             exports_1("AppComponent", AppComponent);
-            exports_1("license", license = ipc.sendSync('licenseQuery')); // Is this good practice? Seems convenient
         }
     }
 });
