@@ -1,7 +1,7 @@
 declare const nodeRequire;
 const Remote = nodeRequire('electron').remote;
 
-import { Component, OnInit, EventEmitter } from 'angular2/core';
+import { Component, OnInit} from 'angular2/core';
 import { Observable } from 'rxjs/Observable';
 import { license } from './services/license-service';
 import { DataService } from './services/data-service';
@@ -21,7 +21,7 @@ export class WelcomeComponent implements OnInit {
 		this.mainWindow = Remote.getCurrentWindow();
         this.licensedTo = license.id;
         
-        // this.userData = dataService.getData();
+        this.userData = dataService.getData();
         this.userFeed = dataService.subscribeTo();
 	}
 
