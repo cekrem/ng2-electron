@@ -4,14 +4,14 @@
 </div>
 
 <div class="center">
-    <button *ngFor="#tournament of tournamentsArray | async" class="btn btn-small btn-default">
+    <button (click)="openTournament(tournament.id)" *ngFor="#tournament of tournamentsArray | async" class="btn btn-small btn-default">
         {{tournament.name}}
     </button>
 </div>
 
 <div class="center">
     <button (click)="newTournament()" class="btn btn-large btn-default">
-        New tournament
+        Create new tournament
         </button>
 </div>
 
