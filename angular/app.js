@@ -1,4 +1,4 @@
-System.register(['angular2/core', 'angular2/router', './welcome'], function(exports_1) {
+System.register(['angular2/core', 'angular2/router', './welcome', './tournament/tournament'], function(exports_1) {
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
         var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
         if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -8,7 +8,7 @@ System.register(['angular2/core', 'angular2/router', './welcome'], function(expo
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, router_1, welcome_1;
+    var core_1, router_1, welcome_1, tournament_1;
     var AppComponent;
     return {
         setters:[
@@ -20,6 +20,9 @@ System.register(['angular2/core', 'angular2/router', './welcome'], function(expo
             },
             function (welcome_1_1) {
                 welcome_1 = welcome_1_1;
+            },
+            function (tournament_1_1) {
+                tournament_1 = tournament_1_1;
             }],
         execute: function() {
             AppComponent = (function () {
@@ -37,6 +40,11 @@ System.register(['angular2/core', 'angular2/router', './welcome'], function(expo
                             name: 'Welcome',
                             component: welcome_1.WelcomeComponent,
                             useAsDefault: true
+                        },
+                        {
+                            path: 'tournament/:id',
+                            name: 'Tournament',
+                            component: tournament_1.TournamentComponent
                         }
                     ]), 
                     __metadata('design:paramtypes', [])
