@@ -2,32 +2,58 @@ declare const nodeRequire;
 const Remote = nodeRequire('electron').remote;
 
 import { Component, OnInit} from 'angular2/core';
+import { NgFor } from 'angular2/common';
 import { Observable } from 'rxjs/Observable';
-import { license } from './services/license-service';
 import { DataService } from './services/data-service';
+import { license } from './services/license-service';
+import { UserData, Tournament } from './services/classes';
 
 @Component({
     selector: 'welcome',
-    templateUrl: './angular/welcome.html'
+    templateUrl: './angular/welcome.html',
+    directives: [NgFor]
 })
 
 export class WelcomeComponent implements OnInit {
+    private data: DataService;
 	private mainWindow: any;
+    private userData: UserData;
     public licensedTo: string;
-    public userData: Promise<any>;
-    public userFeed: Observable<any>;
+    public tournamentsArray: any; // this works fine with ngfor | async
 
 	constructor(dataService: DataService) {
+        this.data = dataService;
 		this.mainWindow = Remote.getCurrentWindow();
         this.licensedTo = license.id;
         
-        this.userData = dataService.getData();
-        this.userFeed = dataService.subscribeTo();
+        this.loadData();
 	}
 
 	ngOnInit() {
 		this.mainWindow.show();
 	}
+    
+    loadData() {
+        this.tournamentsArray = this.data.loadData()
+            .then(data => {
+                this.userData = data;
+                return data.tournamentsArray;
+            });
+    }
+    
+    // observable would be ideal, but whatever...
+    loadData2() {
+        this.tournamentsArray = this.data.loadDataEmitter();
+    }
+    
+    newTournament() {
+        let blankTournament = new Tournament();
+        let id = blankTournament.id;
+        
+        this.userData.tournaments[id] = blankTournament;
+        this.data.saveData(this.userData)
+            .then(() => this.loadData());
+    }
 
 	newWindow() {
 		let win = new Remote.BrowserWindow({ width: 800, height: 600 });

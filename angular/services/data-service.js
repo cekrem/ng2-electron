@@ -1,4 +1,4 @@
-System.register(['angular2/core', 'rxjs/Observable', './license-service'], function(exports_1) {
+System.register(['angular2/core', './license-service', './file-service'], function(exports_1) {
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
         var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
         if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -8,53 +8,62 @@ System.register(['angular2/core', 'rxjs/Observable', './license-service'], funct
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, Observable_1, license_service_1;
+    var core_1, license_service_1, file_service_1;
     var Firebase, DataService;
     return {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
             },
-            function (Observable_1_1) {
-                Observable_1 = Observable_1_1;
-            },
             function (license_service_1_1) {
                 license_service_1 = license_service_1_1;
+            },
+            function (file_service_1_1) {
+                file_service_1 = file_service_1_1;
             }],
         execute: function() {
             Firebase = nodeRequire('Firebase');
             DataService = (function () {
                 function DataService() {
                     this.baseUrl = 'https://dc-pro.firebaseio.com/users/' + license_service_1.license.id;
+                    this.baseRef = new Firebase(this.baseUrl);
+                    this.userData = new core_1.EventEmitter();
                 }
-                DataService.prototype.connectTo = function (path) {
+                // For now, only loads offline data
+                // TODO: compare with online, and return most recent
+                DataService.prototype.loadData = function (path) {
                     if (path === void 0) { path = ''; }
-                    this.activeRef = new Firebase(this.baseUrl + path);
-                };
-                DataService.prototype.getData = function (path) {
-                    if (path === void 0) { path = ''; }
-                    var ref = new Firebase(this.baseUrl + path);
                     var promise = new Promise(function (resolve, reject) {
-                        ref.on('value', function (snapshot) {
-                            resolve(snapshot.val());
-                        });
+                        var offlineData = file_service_1.readFile();
+                        console.warn(offlineData);
+                        setTimeout(function () {
+                            resolve(offlineData);
+                        }, 4000);
                     });
                     return promise;
                 };
-                // not quite working because of firebase crap, see downmost comment
-                DataService.prototype.subscribeTo = function (path) {
-                    var _this = this;
+                // this would be better, but let's not dwell...
+                DataService.prototype.loadDataEmitter = function (path) {
                     if (path === void 0) { path = ''; }
-                    var ref = new Firebase(this.baseUrl + path);
-                    var observable = Observable_1.Observable.create(function (observer) {
-                        ref.on('value', function (snapshot) {
-                            observer.next(snapshot.val());
-                            _this.cdRef.markForCheck();
-                        });
+                    var offlineData = file_service_1.readFile(path);
+                    this.userData.emit(offlineData);
+                    return this.userData;
+                };
+                // For now, only saves offline
+                // TODO: write to firebase as well
+                DataService.prototype.saveData = function (data, path) {
+                    if (path === void 0) { path = ''; }
+                    var promise = new Promise(function (resolve, reject) {
+                        var writeStatus = file_service_1.writeFile(data);
+                        console.log('writeStatus');
+                        if (writeStatus) {
+                            resolve('Data saved!');
+                        }
+                        else {
+                            reject('Data not saved!');
+                        }
                     });
-                    // This sucks, but I have yet to find out how to do change detection on the firebase callback otherwise!
-                    // setInterval(()=> fakeEmitter.emit(Math.random()), 1000);
-                    return observable;
+                    return promise;
                 };
                 DataService = __decorate([
                     core_1.Injectable(), 

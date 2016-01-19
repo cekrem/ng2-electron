@@ -1,4 +1,4 @@
-System.register(['angular2/core', './services/license-service', './services/data-service'], function(exports_1) {
+System.register(['angular2/core', 'angular2/common', './services/data-service', './services/license-service', './services/classes'], function(exports_1) {
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
         var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
         if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -8,30 +8,56 @@ System.register(['angular2/core', './services/license-service', './services/data
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, license_service_1, data_service_1;
+    var core_1, common_1, data_service_1, license_service_1, classes_1;
     var Remote, WelcomeComponent;
     return {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
             },
-            function (license_service_1_1) {
-                license_service_1 = license_service_1_1;
+            function (common_1_1) {
+                common_1 = common_1_1;
             },
             function (data_service_1_1) {
                 data_service_1 = data_service_1_1;
+            },
+            function (license_service_1_1) {
+                license_service_1 = license_service_1_1;
+            },
+            function (classes_1_1) {
+                classes_1 = classes_1_1;
             }],
         execute: function() {
             Remote = nodeRequire('electron').remote;
             WelcomeComponent = (function () {
                 function WelcomeComponent(dataService) {
+                    this.data = dataService;
                     this.mainWindow = Remote.getCurrentWindow();
                     this.licensedTo = license_service_1.license.id;
-                    this.userData = dataService.getData();
-                    this.userFeed = dataService.subscribeTo();
+                    this.loadData();
                 }
                 WelcomeComponent.prototype.ngOnInit = function () {
                     this.mainWindow.show();
+                };
+                WelcomeComponent.prototype.loadData = function () {
+                    var _this = this;
+                    this.tournamentsArray = this.data.loadData()
+                        .then(function (data) {
+                        _this.userData = data;
+                        return data.tournamentsArray;
+                    });
+                };
+                // observable would be ideal, but whatever...
+                WelcomeComponent.prototype.loadData2 = function () {
+                    this.tournamentsArray = this.data.loadDataEmitter();
+                };
+                WelcomeComponent.prototype.newTournament = function () {
+                    var _this = this;
+                    var blankTournament = new classes_1.Tournament();
+                    var id = blankTournament.id;
+                    this.userData.tournaments[id] = blankTournament;
+                    this.data.saveData(this.userData)
+                        .then(function () { return _this.loadData(); });
                 };
                 WelcomeComponent.prototype.newWindow = function () {
                     var win = new Remote.BrowserWindow({ width: 800, height: 600 });
@@ -40,7 +66,8 @@ System.register(['angular2/core', './services/license-service', './services/data
                 WelcomeComponent = __decorate([
                     core_1.Component({
                         selector: 'welcome',
-                        templateUrl: './angular/welcome.html'
+                        templateUrl: './angular/welcome.html',
+                        directives: [common_1.NgFor]
                     }), 
                     __metadata('design:paramtypes', [data_service_1.DataService])
                 ], WelcomeComponent);

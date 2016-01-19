@@ -1,7 +1,20 @@
-<div style="text-align: center">
-    <h1>Welcome!</h1>
+<div class="center">
+    <h1>dc-pro</h1>
     <small>Licensed to: {{licensedTo}}</small>
 </div>
 
-<div>userData: {{userData | async}}</div>
-<div>userFeed: {{userFeed | async}}</div>
+<div class="center">
+    <button *ngFor="#tournament of tournamentsArray | async" class="btn btn-small btn-default">
+        {{tournament.name}}
+    </button>
+</div>
+
+<div class="center">
+    <button (click)="newTournament()" class="btn btn-large btn-default">
+        New tournament
+        </button>
+</div>
+
+
+
+

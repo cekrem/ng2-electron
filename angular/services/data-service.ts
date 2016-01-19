@@ -2,49 +2,60 @@ declare const nodeRequire;
 const Firebase = nodeRequire('Firebase');
 
 import { Injectable, EventEmitter } from 'angular2/core';
-import { Observable } from 'rxjs/Observable';
 
 import { license } from './license-service';
+import { readFile, writeFile } from './file-service';
+import { UserData } from './classes';
 
 @Injectable()
 export class DataService {
     private baseUrl: string;
-    public activeRef: Firebase;
+    public baseRef: Firebase;
+    public userData: EventEmitter<UserData>;
     
     constructor() {
         this.baseUrl = 'https://dc-pro.firebaseio.com/users/' + license.id;
+        this.baseRef = new Firebase(this.baseUrl);
+        this.userData = new EventEmitter();
     }
     
-    connectTo(path: string = '') {
-        this.activeRef = new Firebase(this.baseUrl + path);
-    }
-    
-    getData(path: string = '') {
-        let ref = new Firebase(this.baseUrl + path);
-        
+    // For now, only loads offline data
+    // TODO: compare with online, and return most recent
+    loadData(path: string = ''): Promise<UserData> {        
         let promise = new Promise((resolve, reject) => {
-            ref.on('value', snapshot => {
-               resolve(snapshot.val()); 
-            });
-        })
+            let offlineData = readFile();
+            console.warn(offlineData);
+            
+            resolve(offlineData);
+        });
         
         return promise;
     }
-
-    // not quite working because of firebase crap, see downmost comment
-    subscribeTo(path: string = '') {
-        let ref = new Firebase(this.baseUrl + path);
+    
+    // this would be better, but let's not dwell...
+    loadDataEmitter(path: string = ''): EventEmitter<UserData> {
+        let offlineData = readFile(path);
         
-        let observable = Observable.create(observer => {
-            ref.on('value', snapshot => {
-                observer.next(snapshot.val());
-                this.cdRef.markForCheck();
-            });
-        })
+        this.userData.emit(offlineData);
         
-        // This sucks, but I have yet to find out how to do change detection on the firebase callback otherwise!
-        // setInterval(()=> fakeEmitter.emit(Math.random()), 1000);
+        return this.userData;
+    }
+    
+    // For now, only saves offline
+    // TODO: write to firebase as well
+    saveData(data, path: string = ''): Promise<string> {
+        let promise = new Promise((resolve, reject) => {
+            let writeStatus = writeFile(data);
+            console.log('writeStatus');
+            
+            if(writeStatus) {
+                resolve('Data saved!')
+            }
+            else {
+                reject('Data not saved!');
+            }
+        });
         
-        return observable;
-    }    
+        return promise;
+    }
 }
