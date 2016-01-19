@@ -58,10 +58,13 @@ System.register(['angular2/core', 'angular2/common', './services/data-service', 
                     this.userData.tournaments[id] = blankTournament;
                     this.data.saveData(this.userData)
                         .then(function () { return _this.loadData(); });
+                    this.newWindow(id);
                 };
-                WelcomeComponent.prototype.newWindow = function () {
+                WelcomeComponent.prototype.newWindow = function (id) {
+                    var welcomeWin = Remote.BrowserWindow.getFocusedWindow();
                     var win = new Remote.BrowserWindow({ width: 800, height: 600 });
-                    win.loadURL("file://" + __dirname + "/index.html");
+                    win.loadURL(("file://" + __dirname + "/index.html#tournament/") + id);
+                    welcomeWin.destroy();
                 };
                 WelcomeComponent = __decorate([
                     core_1.Component({

@@ -36,9 +36,7 @@ System.register(['angular2/core', './license-service', './file-service'], functi
                     var promise = new Promise(function (resolve, reject) {
                         var offlineData = file_service_1.readFile();
                         console.warn(offlineData);
-                        setTimeout(function () {
-                            resolve(offlineData);
-                        }, 4000);
+                        resolve(offlineData);
                     });
                     return promise;
                 };

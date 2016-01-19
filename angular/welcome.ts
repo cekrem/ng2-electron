@@ -53,10 +53,14 @@ export class WelcomeComponent implements OnInit {
         this.userData.tournaments[id] = blankTournament;
         this.data.saveData(this.userData)
             .then(() => this.loadData());
+        
+        this.newWindow(id);
     }
 
-	newWindow() {
+	newWindow(id) {
+        let welcomeWin = Remote.BrowserWindow.getFocusedWindow();
 		let win = new Remote.BrowserWindow({ width: 800, height: 600 });
-		win.loadURL(`file://${__dirname}/index.html`);
+		win.loadURL(`file://${__dirname}/index.html#tournament/` + id);
+        welcomeWin.destroy();
 	}
 }
