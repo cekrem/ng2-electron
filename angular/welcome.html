@@ -4,7 +4,7 @@
 </div>
 
 <div class="center">
-    <button (click)="openTournament(tournament.id)" *ngFor="#tournament of tournamentsArray | async" class="btn btn-small btn-default">
+    <button (click)="openTournament(tournament.id)" *ngFor="#tournament of tournamentsArray" class="btn btn-small btn-default">
         {{tournament.name}}
     </button>
 </div>

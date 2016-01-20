@@ -2,6 +2,7 @@ declare const nodeRequire;
 const Firebase = nodeRequire('Firebase');
 
 import { Injectable, EventEmitter } from 'angular2/core';
+import { Observable } from 'rxjs/Observable';
 
 import { license } from './license-service';
 import { readFile, writeFile } from './file-service';
@@ -9,36 +10,26 @@ import { UserData } from './classes';
 
 @Injectable()
 export class DataService {
-    private baseUrl: string;
-    public baseRef: Firebase;
-    public userData: EventEmitter<UserData>;
+    // private _baseUrl: string;
+    private _userDataObserver: any;
+    
+    public userData: Observable<UserData>;
     
     constructor() {
-        this.baseUrl = 'https://dc-pro.firebaseio.com/users/' + license.id;
-        this.baseRef = new Firebase(this.baseUrl);
-        this.userData = new EventEmitter();
+        // this._baseUrl = 'https://dc-pro.firebaseio.com/users/' + license.id;
+        this.userData = new Observable(observer => 
+            this._userDataObserver = observer).share();
+        
+        this.userData
+            .subscribe(data => console.warn(data));
     }
     
     // For now, only loads offline data
     // TODO: compare with online, and return most recent
-    loadData(path: string = ''): Promise<UserData> {        
-        let promise = new Promise((resolve, reject) => {
-            let offlineData = readFile();
-            console.warn(offlineData);
-            
-            resolve(offlineData);
-        });
+    loadData(path: string = '') {        
+        let offlineData = readFile();
         
-        return promise;
-    }
-    
-    // this would be better, but let's not dwell...
-    loadDataEmitter(path: string = ''): EventEmitter<UserData> {
-        let offlineData = readFile(path);
-        
-        this.userData.emit(offlineData);
-        
-        return this.userData;
+        this._userDataObserver.next(offlineData);
     }
     
     // For now, only saves offline

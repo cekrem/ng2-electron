@@ -31,34 +31,32 @@ System.register(['angular2/core', 'angular2/common', './services/data-service', 
             Remote = nodeRequire('electron').remote;
             WelcomeComponent = (function () {
                 function WelcomeComponent(dataService) {
-                    this.data = dataService;
-                    this.mainWindow = Remote.getCurrentWindow();
+                    var _this = this;
+                    this._data = dataService;
+                    this._mainWindow = Remote.getCurrentWindow();
                     this.licensedTo = license_service_1.license.id;
+                    this.tournamentsArray = [];
+                    dataService.userData
+                        .subscribe(function (data) {
+                        _this._userData = data;
+                        _this.tournamentsArray = data.tournamentsArray;
+                    });
                     this.loadData();
                 }
                 WelcomeComponent.prototype.ngOnInit = function () {
-                    this.mainWindow.show();
+                    this._mainWindow.show();
                 };
                 WelcomeComponent.prototype.loadData = function () {
-                    var _this = this;
-                    this.tournamentsArray = this.data.loadData()
-                        .then(function (data) {
-                        _this.userData = data;
-                        return data.tournamentsArray;
-                    });
-                };
-                // observable would be ideal, but whatever...
-                WelcomeComponent.prototype.loadData2 = function () {
-                    this.tournamentsArray = this.data.loadDataEmitter();
+                    this._data.loadData();
                 };
                 WelcomeComponent.prototype.newTournament = function () {
                     var _this = this;
                     var blankTournament = new classes_1.Tournament();
                     var id = blankTournament.id;
-                    this.userData.tournaments[id] = blankTournament;
-                    this.data.saveData(this.userData)
+                    this._userData.tournaments[id] = blankTournament;
+                    this._data.saveData(this._userData)
                         .then(function () { return _this.loadData(); });
-                    this.openTournament(id);
+                    // this.openTournament(id);
                 };
                 WelcomeComponent.prototype.openTournament = function (id) {
                     var welcomeWin = Remote.BrowserWindow.getFocusedWindow();

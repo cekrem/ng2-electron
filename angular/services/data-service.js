@@ -1,4 +1,4 @@
-System.register(['angular2/core', './license-service', './file-service'], function(exports_1) {
+System.register(['angular2/core', 'rxjs/Observable', './file-service'], function(exports_1) {
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
         var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
         if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -8,15 +8,15 @@ System.register(['angular2/core', './license-service', './file-service'], functi
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, license_service_1, file_service_1;
+    var core_1, Observable_1, file_service_1;
     var Firebase, DataService;
     return {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
             },
-            function (license_service_1_1) {
-                license_service_1 = license_service_1_1;
+            function (Observable_1_1) {
+                Observable_1 = Observable_1_1;
             },
             function (file_service_1_1) {
                 file_service_1 = file_service_1_1;
@@ -25,27 +25,20 @@ System.register(['angular2/core', './license-service', './file-service'], functi
             Firebase = nodeRequire('Firebase');
             DataService = (function () {
                 function DataService() {
-                    this.baseUrl = 'https://dc-pro.firebaseio.com/users/' + license_service_1.license.id;
-                    this.baseRef = new Firebase(this.baseUrl);
-                    this.userData = new core_1.EventEmitter();
+                    var _this = this;
+                    // this._baseUrl = 'https://dc-pro.firebaseio.com/users/' + license.id;
+                    this.userData = new Observable_1.Observable(function (observer) {
+                        return _this._userDataObserver = observer;
+                    }).share();
+                    this.userData
+                        .subscribe(function (data) { return console.warn(data); });
                 }
                 // For now, only loads offline data
                 // TODO: compare with online, and return most recent
                 DataService.prototype.loadData = function (path) {
                     if (path === void 0) { path = ''; }
-                    var promise = new Promise(function (resolve, reject) {
-                        var offlineData = file_service_1.readFile();
-                        console.warn(offlineData);
-                        resolve(offlineData);
-                    });
-                    return promise;
-                };
-                // this would be better, but let's not dwell...
-                DataService.prototype.loadDataEmitter = function (path) {
-                    if (path === void 0) { path = ''; }
-                    var offlineData = file_service_1.readFile(path);
-                    this.userData.emit(offlineData);
-                    return this.userData;
+                    var offlineData = file_service_1.readFile();
+                    this._userDataObserver.next(offlineData);
                 };
                 // For now, only saves offline
                 // TODO: write to firebase as well

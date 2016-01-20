@@ -15,46 +15,46 @@ import { UserData, Tournament } from './services/classes';
 })
 
 export class WelcomeComponent implements OnInit {
-    private data: DataService;
-	private mainWindow: any;
-    private userData: UserData;
+    private _data: DataService;
+	private _mainWindow: any;
+    private _userData: UserData;
+
     public licensedTo: string;
-    public tournamentsArray: any; // this works fine with ngfor | async
+    public tournamentsArray: Array<any>;
 
 	constructor(dataService: DataService) {
-        this.data = dataService;
-		this.mainWindow = Remote.getCurrentWindow();
+        this._data = dataService;
+		this._mainWindow = Remote.getCurrentWindow();
+
         this.licensedTo = license.id;
+        this.tournamentsArray = [];
+        
+        dataService.userData
+            .subscribe(data => {
+                this._userData = data;
+                this.tournamentsArray = data.tournamentsArray;
+            });
         
         this.loadData();
 	}
 
 	ngOnInit() {
-		this.mainWindow.show();
+		this._mainWindow.show();
 	}
     
     loadData() {
-        this.tournamentsArray = this.data.loadData()
-            .then(data => {
-                this.userData = data;
-                return data.tournamentsArray;
-            });
-    }
-    
-    // observable would be ideal, but whatever...
-    loadData2() {
-        this.tournamentsArray = this.data.loadDataEmitter();
+        this._data.loadData();
     }
     
     newTournament() {
         let blankTournament = new Tournament();
         let id = blankTournament.id;
         
-        this.userData.tournaments[id] = blankTournament;
-        this.data.saveData(this.userData)
+        this._userData.tournaments[id] = blankTournament;
+        this._data.saveData(this._userData)
             .then(() => this.loadData());
         
-        this.openTournament(id);
+        // this.openTournament(id);
     }
 
 	openTournament(id) {
