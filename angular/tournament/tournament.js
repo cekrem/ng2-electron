@@ -26,11 +26,12 @@ System.register(['angular2/core', 'angular2/router', '../services/data-service']
             TournamentComponent = (function () {
                 function TournamentComponent(dataService, params) {
                     this.id = params.get('id');
-                    this.data = dataService;
-                    this.mainWindow = Remote.getCurrentWindow();
+                    this._data = dataService;
+                    this._mainWindow = Remote.getCurrentWindow();
                 }
                 TournamentComponent.prototype.ngOnInit = function () {
                     console.log('Tournament init! YAY!' + this.id);
+                    this.loaded = true;
                 };
                 TournamentComponent = __decorate([
                     core_1.Component({

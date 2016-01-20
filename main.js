@@ -54,7 +54,7 @@ function loadWelcome() {
         transparent: false,
         resizable: false,
         frame: false,
-        show: true });
+        show: false });
     mainWindow.loadURL(`file://${__dirname}/index.html`);
 }
 

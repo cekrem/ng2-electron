@@ -11,16 +11,20 @@ import { DataService } from '../services/data-service';
 })
 
 export class TournamentComponent implements OnInit {
-    private data: DataService;
-    private mainWindow: any;
+    private _data: DataService;
+    private _mainWindow: any;
+    
     public id: string;
+    public loaded: boolean;
 
     constructor(dataService: DataService, params: RouteParams) {
         this.id = params.get('id');
-        this.data = dataService;
-		this.mainWindow = Remote.getCurrentWindow();
+        this._data = dataService;
+		this._mainWindow = Remote.getCurrentWindow();
     }
+    
     ngOnInit() {
         console.log('Tournament init! YAY!' + this.id);
+        this.loaded = true;
     }
 }

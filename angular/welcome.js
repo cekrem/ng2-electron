@@ -56,13 +56,12 @@ System.register(['angular2/core', 'angular2/common', './services/data-service', 
                     this._userData.tournaments[id] = blankTournament;
                     this._data.saveData(this._userData)
                         .then(function () { return _this.loadData(); });
-                    // this.openTournament(id);
+                    this.openTournament(id);
                 };
                 WelcomeComponent.prototype.openTournament = function (id) {
-                    var welcomeWin = Remote.BrowserWindow.getFocusedWindow();
                     var win = new Remote.BrowserWindow({ width: 800, height: 600 });
                     win.loadURL(("file://" + __dirname + "/index.html#tournament/") + id);
-                    welcomeWin.destroy();
+                    this._mainWindow.destroy();
                 };
                 WelcomeComponent = __decorate([
                     core_1.Component({
